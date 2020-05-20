@@ -7,7 +7,7 @@ export const defaults = {
       __typename: "Note",
       id: 1,
       title: "First",
-      content: "First content",
+      content: "First content\n ## heading2",
     },
   ],
 };
