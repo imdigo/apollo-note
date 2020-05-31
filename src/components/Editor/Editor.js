@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import MarkdownRenderer from "react-markdown-renderer";
 import TextareaAutosize from "react-textarea-autosize";
@@ -32,15 +32,11 @@ const TitleContainer = styled.div`
 const Button = styled.button``;
 
 const Editor = (props) => {
-  useEffect(() => {
-    setPost({
-      title: props.title || "",
-      content: props.content || "",
-      id: props.id || null,
-    });
-  }, []);
-
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState({
+    title: props.title || "",
+    content: props.content || "",
+    id: props.id || null,
+  });
 
   const _onSave = () => {
     const { onSave } = props;
@@ -53,6 +49,7 @@ const Editor = (props) => {
       target: { value, name },
     } = event;
     setPost({
+      ...post,
       [name]: value,
     });
   };
