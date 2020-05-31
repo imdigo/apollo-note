@@ -31,29 +31,7 @@ const TitleContainer = styled.div`
 
 const Button = styled.button``;
 
-type Post = {
-  title: string;
-  content: string;
-  id: number;
-};
-
-const Editor = (props: any) => {
-  const _onInputChange = (event: any) => {
-    const {
-      target: { value, name },
-    } = event;
-    this.setState({
-      [name]: value,
-    });
-  };
-  const _onSave = () => {
-    const { onSave } = this.props;
-    const { title, content, id } = this.state;
-    onSave(title, content, id);
-  };
-
-  const [post, setPost] = useState<Post>(null);
-
+const Editor = (props) => {
   useEffect(() => {
     setPost({
       title: props.title || "",
@@ -61,6 +39,23 @@ const Editor = (props: any) => {
       id: props.id || null,
     });
   }, []);
+
+  const [post, setPost] = useState(null);
+
+  const _onSave = () => {
+    const { onSave } = props;
+    const { title, content, id } = post;
+    onSave(title, content, id);
+  };
+
+  const _onInputChange = (event) => {
+    const {
+      target: { value, name },
+    } = event;
+    setPost({
+      [name]: value,
+    });
+  };
 
   const { title, content } = post;
   return (
