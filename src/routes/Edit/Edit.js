@@ -1,6 +1,6 @@
 import React from "react";
 import Editor from "../../components/Editor";
-import { Query, useMutation } from "react-apollo";
+import { useMutation, useQuery } from "react-apollo";
 import { GET_NOTE } from "../../queries";
 import gql from "graphql-tag";
 
@@ -13,8 +13,6 @@ export const EDIT_NOTE = gql`
 `;
 
 export default (props) => {
-  const [editNote] = useMutation(EDIT_NOTE);
-
   const _onSave = (title, content, id) => {
     const { history } = props;
     if (title !== "" && content !== "" && id) {
@@ -29,21 +27,24 @@ export default (props) => {
       params: { id },
     },
   } = props;
+  const [editNote] = useMutation(EDIT_NOTE);
+  const { loading, error, data } = useQuery(GET_NOTE, {
+    variables: { id },
+  });
+
+  if (loading) {
+    return <h1>Loading ...</h1>;
+  }
+  if (error) return `Error! ${error.message}`;
 
   return (
-    <Query query={GET_NOTE} variables={{ id }}>
-      {({ data }) => {
-        return data ? (
-          <Editor
-            title={data.note.title}
-            content={data.note.content}
-            id={data.note.id}
-            onSave={_onSave}
-          />
-        ) : (
-          <h1>Loading</h1>
-        );
-      }}
-    </Query>
+    data && (
+      <Editor
+        title={data.note.title}
+        content={data.note.content}
+        id={data.note.id}
+        onSave={_onSave}
+      />
+    )
   );
 };

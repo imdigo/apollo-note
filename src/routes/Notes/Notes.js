@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Plus } from "../../components/plus.svg";
-import { Query } from "react-apollo";
+import { useQuery } from "react-apollo";
 import styled from "styled-components";
 import { GET_NOTES } from "../../queries";
 
@@ -59,6 +59,13 @@ const NoteTitle = styled.span`
 `;
 
 export default () => {
+  const { loading, error, data } = useQuery(GET_NOTES);
+
+  if (loading) {
+    return <h1>Loading ...</h1>;
+  }
+  if (error) return `Error! ${error.message}`;
+
   return (
     <>
       <Header>
@@ -73,19 +80,14 @@ export default () => {
         <Subtitle>Taking notes while we learn.</Subtitle>
       </Header>
       <Notes>
-        <Query query={GET_NOTES}>
-          {({ data }) =>
-            data.notes
-              ? data.notes.map((note, index) => (
-                  <Link to={`/note/${note.id}`} key={index}>
-                    <Note>
-                      <NoteTitle>{note.title}</NoteTitle>
-                    </Note>
-                  </Link>
-                ))
-              : null
-          }
-        </Query>
+        {data.notes &&
+          data.notes.map((note, index) => (
+            <Link to={`/note/${note.id}`} key={index}>
+              <Note>
+                <NoteTitle>{note.title}</NoteTitle>
+              </Note>
+            </Link>
+          ))}
       </Notes>
     </>
   );

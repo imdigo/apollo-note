@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Query } from "react-apollo";
+import { useQuery } from "react-apollo";
 import { GET_NOTE } from "../../queries";
 import styled from "styled-components";
 import MarkdownRenderer from "react-markdown-renderer";
@@ -26,34 +26,27 @@ export default (props) => {
       params: { id },
     },
   } = props;
-  // console.log("id:", id);
-  // const { loading, error, data } = useQuery(GET_NOTE, {
-  //   variables: { id },
-  // });
-  // console.log(
-  //   "From hooks!!!",
-  //   "loading:",
-  //   loading,
-  //   "error:",
-  //   error,
-  //   "data:",
-  //   data
-  // );
+
+  const { loading, error, data } = useQuery(GET_NOTE, {
+    variables: { id },
+  });
+
+  if (loading) {
+    return <h1>Loading ...</h1>;
+  }
+  if (error) return `Error! ${error.message}`;
+
   return (
-    <Query query={GET_NOTE} variables={{ id }}>
-      {({ data }) =>
-        data ? (
-          <>
-            <TitleComponent>
-              <Title>{data.note && data.note.title}</Title>
-              <Link to={`/edit/${data.note.id}`}>
-                <Button>Edit</Button>
-              </Link>
-            </TitleComponent>
-            <MarkdownRenderer markdown={data.note.content} />{" "}
-          </>
-        ) : null
-      }
-    </Query>
+    data && (
+      <>
+        <TitleComponent>
+          <Title>{data.note && data.note.title}</Title>
+          <Link to={`/edit/${data.note.id}`}>
+            <Button>Edit</Button>
+          </Link>
+        </TitleComponent>
+        <MarkdownRenderer markdown={data.note.content} />{" "}
+      </>
+    )
   );
 };
