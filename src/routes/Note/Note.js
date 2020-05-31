@@ -20,12 +20,12 @@ const Title = styled.h1`
 
 const Button = styled.button``;
 
-export default (...props) => {
+export default (props) => {
   const {
     match: {
       params: { id },
     },
-  } = props[0];
+  } = props;
   // console.log("id:", id);
   // const { loading, error, data } = useQuery(GET_NOTE, {
   //   variables: { id },
