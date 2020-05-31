@@ -76,8 +76,8 @@ export default () => {
         <Query query={GET_NOTES}>
           {({ data }) =>
             data.notes
-              ? data.notes.map((note) => (
-                  <Link to={`/note/${note.id}`}>
+              ? data.notes.map((note, index) => (
+                  <Link to={`/note/${note.id}`} key={index}>
                     <Note>
                       <NoteTitle>{note.title}</NoteTitle>
                     </Note>
